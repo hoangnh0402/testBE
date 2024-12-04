@@ -16,9 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 @Slf4j
 @RequiredArgsConstructor
 @EnableConfigurationProperties({AdminInfoProperties.class})
@@ -52,8 +49,7 @@ public class ProjectBaseApplication {
       //init role
       if (roleRepository.count() == 0) {
         roleRepository.save(new Role(null, RoleConstant.ADMIN, null));
-        roleRepository.save(new Role(null, RoleConstant.TEACHER, null));
-        roleRepository.save(new Role(null, RoleConstant.STUDENT, null));
+        roleRepository.save(new Role(null, RoleConstant.USER, null));
       }
       //init admin
       if (userRepository.count() == 0) {
