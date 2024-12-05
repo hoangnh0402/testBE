@@ -46,12 +46,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.cors().configurationSource(request -> corsConfiguration())
-        .and().csrf().disable()
-        .authorizeRequests()
-        .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-        .antMatchers("/api/v1/auth/**").permitAll()
-        .anyRequest().authenticated()
-        .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .and().csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+            .antMatchers("/api/v1/auth/**").permitAll()
+            .antMatchers("/auth/**").permitAll()
+            .antMatchers("/web-admin/**").permitAll()
+            .antMatchers("/admin/**").hasRole("ADMIN")
+            .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
+            .anyRequest().authenticated()
+            .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and().sessionManagement().enableSessionUrlRewriting(true);
+
     http.exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint());
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
   }
